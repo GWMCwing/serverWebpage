@@ -1,3 +1,11 @@
+.noDrag {
+	/* user-drag: none; */
+	-webkit-user-drag: none;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
 #ig-header-flex-container {
 	width: 100%;
 	display: flex;
@@ -97,7 +105,7 @@
 
 .ig-content-box {
 	width: 100%;
-	height: 80vh;
+	/* height: 80vh; */
 	padding-top: 0.7rem;
 	box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
 }
@@ -142,9 +150,66 @@
 }
 
 .ig-content-box-option a:link,
-.ig-content-box-option a:active,
 .ig-content-box-option a:visited,
 .ig-content-box-option a:hover {
+	color: black;
+	text-decoration: none;
+}
+.ig-content-box-option a:active {
+	font-size: 1rem;
+}
+.ig-content-box-button-container {
+	display: inline-flex;
+	width: 100%;
+	padding-top: 0.25rem;
+	font-size: 1.6rem;
+}
+.ig-content-box-button-container a {
+	text-align: center;
+	padding-left: 0.7rem;
+	padding-top: 0.15rem;
+	min-width: 1.7rem;
+	flex-grow: 0;
+	flex-shrink: 0;
+	position: static;
+}
+.ig-content-box-button-container a:link,
+.ig-content-box-button-container a:visited,
+.ig-content-box-button-container a:hover {
+	color: black;
+	text-decoration-line: none;
+}
+.ig-content-box-button-container a:hover {
+	color: rgb(134, 134, 134);
+}
+.ig-content-box-button-container a:active {
+	font-size: 1.3rem;
+}
+.ig-content-box-button-container-heart:active {
+	color: red !important;
+}
+.ig-content-box-button-container-save {
+	padding-left: 0rem;
+	margin-left: auto;
+	padding-right: 0.7rem;
+}
+/*  */
+.ig-content-box-likes {
+	padding-left: 0.7rem;
+	padding-top: 0.3rem;
+	font-size: 1.1rem;
+}
+/*  */
+.ig-content-box-comments {
+	padding-left: 0.7rem;
+	padding-top: 0.3rem;
+	font-size: 1.2rem;
+}
+.ig-content-box-comments a:link,
+.ig-content-box-comments a:visited,
+.ig-content-box-comments a:hover,
+.ig-content-box-comments a:active {
+	font-weight: 550;
 	color: black;
 	text-decoration: none;
 }
