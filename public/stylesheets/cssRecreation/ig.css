@@ -1,10 +1,14 @@
 .noDrag {
 	/* user-drag: none; */
 	-webkit-user-drag: none;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
 	-ms-user-select: none;
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Old versions of Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 #ig-header-flex-container {
 	width: 100%;
@@ -41,6 +45,13 @@
 	border: none;
 	border-radius: 0.5em;
 	box-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.1);
+}
+#ig-header-input[type='text'] {
+	background-image: url('/images/searchMagnifyingGlass.png');
+	background-size: 1.3rem;
+	background-repeat: no-repeat;
+	background-position: 0.3rem center;
+	padding-left: 1.9rem;
 }
 #ig-header-input:focus,
 #ig-header-input:hover {
@@ -104,7 +115,7 @@
 }
 
 .ig-content-box {
-	width: 100%;
+	width: 25rem;
 	/* height: 80vh; */
 	padding-top: 0.7rem;
 	box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
@@ -158,6 +169,11 @@
 .ig-content-box-option a:active {
 	font-size: 1rem;
 }
+/*  */
+.ig-content-box-image img {
+	min-width: 100%;
+}
+/*  */
 .ig-content-box-button-container {
 	display: inline-flex;
 	width: 100%;
@@ -189,7 +205,6 @@
 	color: red !important;
 }
 .ig-content-box-button-container-save {
-	padding-left: 0rem;
 	margin-left: auto;
 	padding-right: 0.7rem;
 }
@@ -203,13 +218,88 @@
 .ig-content-box-comments {
 	padding-left: 0.7rem;
 	padding-top: 0.3rem;
-	font-size: 1.2rem;
+	font-size: 1.05rem;
 }
 .ig-content-box-comments a:link,
 .ig-content-box-comments a:visited,
 .ig-content-box-comments a:hover,
 .ig-content-box-comments a:active {
+	font-size: 1.2rem;
 	font-weight: 550;
 	color: black;
 	text-decoration: none;
+}
+/*  */
+.ig-content-box-comments-view-more {
+	padding-left: 0.7rem;
+	padding-top: 0.3rem;
+	font-size: 0.9rem;
+}
+.ig-content-box-comments-view-more a:link,
+.ig-content-box-comments-view-more a:visited,
+.ig-content-box-comments-view-more a:hover,
+.ig-content-box-comments-view-more a:active {
+	color: rgb(180, 180, 180);
+	text-decoration: none;
+}
+/*  */
+.ig-content-box-time {
+	padding-left: 0.7rem;
+	padding-top: 0.3rem;
+	padding-bottom: 0.5rem;
+	font-size: 0.6rem;
+}
+.ig-content-box-time a:link,
+.ig-content-box-time a:visited,
+.ig-content-box-time a:hover,
+.ig-content-box-time a:active {
+	color: rgb(180, 180, 180);
+	text-decoration: none;
+}
+/*  */
+.ig-content-box-comment-box {
+	width: 100%;
+	height: 100%;
+	display: inline-flex;
+	align-items: center;
+	border-top: 1px solid rgb(230, 230, 230);
+	justify-content: space-between;
+}
+/*  */
+.ig-content-box-bomment-box-emoji {
+	padding-left: 0.4rem;
+	padding-right: 1rem;
+	padding-top: 0.7rem;
+	padding-bottom: 0.4rem;
+	font-size: 1.5rem;
+	color: black;
+}
+/*  */
+.ig-content-box-bomment-box-input {
+	margin-top: 0.3rem;
+	padding-left: 0.6rem;
+	margin-right: auto;
+	border-radius: 0.3rem;
+	width: 100%;
+	border: none;
+}
+
+/*  */
+.ig-content-box-bomment-box-input:focus,
+.ig-content-box-bomment-box-input:hover {
+	outline: none;
+}
+.ig-content-box-bomment-box-input:not(:placeholder-shown) + a {
+	color: rgb(57, 120, 255);
+	font-weight: bolder;
+}
+/*  */
+.ig-content-box-bomment-box-post {
+	width: fit-content;
+	text-decoration: none;
+	font-size: 1.2rem;
+	font-weight: bolder;
+	color: rgb(185, 207, 255);
+	padding-right: 0.7rem;
+	justify-self: right;
 }
