@@ -1,0 +1,76 @@
+html {
+	scroll-behavior: smooth;
+}
+/* body */
+body {
+	margin: 0;
+	/* padding-top: 52px; */
+}
+/*  navbar */
+#navBar ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	z-index: 100;
+	/* sticky Not Tested */
+	position: -webkit-sticky; /*For Safari*/
+	position: sticky;
+	top: 0;
+	border: 1px solid #555;
+	width: 100%;
+	background-color: #353535;
+	/* position: fixed; */
+	overflow: hidden;
+}
+#navBar ul li {
+	float: left;
+}
+#navBar ul li a {
+	display: block;
+	font-weight: bold;
+	text-decoration: none;
+	text-align: center;
+	padding: 16px 16px;
+	color: rgb(255, 255, 255);
+}
+#navBar ul li a:hover:not(.active) {
+	background-color: #000000;
+}
+.active {
+	background-color: #1100ff;
+}
+/*  */
+#navBar .dropbtn {
+	cursor: default;
+}
+#navBar .dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+#navBar .dropdown .dropdown-content {
+	display: none;
+	position: fixed;
+	background-color: #f9f9f9;
+	/* padding: 16px 16px; */
+	/* min-width: 160px; */
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 100;
+}
+/* Links inside the dropdown */
+#navBar .dropdown .dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+}
+
+/* Change color of dropdown links on hover */
+#navBar .dropdown .dropdown-content a:hover {
+	background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+#navBar .dropdown:hover .dropdown-content {
+	display: block;
+}
