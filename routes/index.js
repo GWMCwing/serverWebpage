@@ -4,6 +4,8 @@ var router = express.Router();
 const path = require('path');
 const pathToViews = path.join(__dirname, '../views');
 const multer = require('multer');
+const fs = require('fs');
+const crypto = require('crypto');
 /* GET home page. */
 router.get('/', function (req, res, next) {
 	res.sendFile(pathToViews + '/html/main/main.html');
@@ -89,8 +91,7 @@ const upload = multer({ storage: storage });
 router.post('/upload', upload.array('files'), function (req, res) {
 	// router.post('/upload', multer().fields([]), function (req, res) {
 	console.log(req.files, req.body);
-	//TODO return SHA-1 hash
-	//TODO modify the location of the files uploaded
+
 	//
 	// create id folder (time stamp ?)
 	// loop through the filePath
@@ -100,6 +101,22 @@ router.post('/upload', upload.array('files'), function (req, res) {
 	//
 	// response: id as cookie
 	//
+	let id = crypto.randomBytes(8).toString('hex');
+	while (fs.existsSync('./public/uploads/' + id)) {
+		id = crypto.randomBytes(8).toString('hex');
+	}
+	fs.mkdirSync('./public/uploads/' + id);
+
+	for (let i = 0; i < req.files.length; i++) {
+		let localFilePath = req.body.filePath[i].split('/');
+		localFilePath.pop();
+		if (fs.existsSync('./public/uploads/' + id + '/' + localFilePath.join('/'))) {
+			fs.mkdirSync('./public/uploads/' + id + '/' + localFilePath.join('/'));
+		}
+		fs.rename('./public/uploads/temp/' + req.files[i].filename, './public/uploads/' + id + '/' + req.body.filePath[i]);
+		//
+	}
+	//TODO response id as cookie and update the page with the id
 	res.send('uploaded');
 });
 module.exports = router;
