@@ -1,0 +1,19 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet" />
+<script src="/javascripts/main/dragAndDrop.js"></script>
+<div id="drop-area" style="min-height: 9rem; width: 100%">
+	<div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+	<div id="dragDropTextDiv">
+		<p id="dragDropText">Drag & Drop to Upload</p>
+		<p id="dragDropText">Files or Directory</p>
+	</div>
+	<button id="browseButton">Browse File</button>
+	<input id="inputFile" type="file" multiple hidden />
+</div>
+<div id="localFileListDiv" class="FileListDiv">
+	<ul id="localFileList" class="FileList"></ul>
+	<button id="sendFileButton">Send Files</button>
+	<progress id="uploadProgressBar" min="0" max="100" value="0" style="width: 100%"></progress>
+</div>
+<div id="serverFileListDiv" class="FileListDiv">
+	<ul id="serverFileList" class="FileList"></ul>
+</div>

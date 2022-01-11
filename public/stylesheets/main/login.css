@@ -1,0 +1,35 @@
+body {
+	background-color: rgb(228, 228, 228);
+}
+#content {
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.5rem;
+}
+#content form {
+	background-color: rgb(127, 255, 212);
+	border-radius: 4rem;
+	padding: 0.3rem 1.2rem 2rem 1.2rem;
+}
+#content form p:first-child {
+	font-weight: bold;
+	font-size: 3rem;
+}
+#content form p > input {
+	background-color: inherit;
+	border: none;
+	box-shadow: 0rem 0rem 1rem 0.2rem rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+}
+
+#content form p input[type='submit'] {
+	width: 100%;
+	line-height: 1.4rem;
+	box-shadow: 0rem 0rem 5rem 0.2rem rgba(0, 0, 0, 0.1);
+	/* box-shadow: none; */
+	/* color: rgba(0, 0, 0, 0); */
+	background-color: inherit;
+	border-radius: 3rem;
+}

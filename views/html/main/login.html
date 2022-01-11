@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+	<title>Login page</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+	$(function () {
+		$('#navBar').load('/html/template/header.html');
+		$('#footer').load('/html/template/footer.html');
+	});
+</script>
+<script src="/javascripts/main/changeContent.js"></script>
+<div id="navBar"></div>
+<div id="content" style="height: 100vh">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/main/login.css" />
+	<form method="post" action="/login">
+		<p>Login</p>
+		<p>
+			<label>Username:</label>
+			<input type="text" name="username" placeholder=" " />
+		</p>
+		<p>
+			<label>Password:</label>
+			<input type="password" name="password" placeholder=" " />
+		</p>
+		<p>
+			<input type="submit" value="Login" />
+		</p>
+	</form>
+</div>
+<div id="footer"></div>

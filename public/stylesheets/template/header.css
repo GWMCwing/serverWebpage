@@ -9,15 +9,14 @@ body {
 /*  navbar */
 #navBar ul {
 	list-style-type: none;
-	margin: 0;
-	padding: 0;
+	margin: 0rem;
+	padding: 0rem;
 	z-index: 100;
 	/* sticky Not Tested */
 	position: -webkit-sticky; /*For Safari*/
 	position: sticky;
-	top: 0;
+	top: 0rem;
 	border: 1px solid #555;
-	width: 100%;
 	background-color: #353535;
 	/* position: fixed; */
 	overflow: hidden;
@@ -30,7 +29,7 @@ body {
 	font-weight: bold;
 	text-decoration: none;
 	text-align: center;
-	padding: 16px 16px;
+	padding: 12px 16px;
 	color: rgb(255, 255, 255);
 }
 #navBar ul li a:hover:not(.active) {
