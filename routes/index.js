@@ -110,10 +110,16 @@ router.post('/upload', upload.array('files'), function (req, res) {
 	for (let i = 0; i < req.files.length; i++) {
 		let localFilePath = req.body.filePath[i].split('/');
 		localFilePath.pop();
-		if (fs.existsSync('./public/uploads/' + id + '/' + localFilePath.join('/'))) {
+		if (!fs.existsSync('./public/uploads/' + id + '/' + localFilePath.join('/'))) {
 			fs.mkdirSync('./public/uploads/' + id + '/' + localFilePath.join('/'));
 		}
-		fs.rename('./public/uploads/temp/' + req.files[i].filename, './public/uploads/' + id + '/' + req.body.filePath[i]);
+		fs.rename(
+			'./public/uploads/temp/' + req.files[i].filename,
+			'./public/uploads/' + id + '/' + req.body.filePath[i],
+			(err) => {
+				if (err) throw err;
+			}
+		);
 		//
 	}
 	//TODO response id as cookie and update the page with the id
