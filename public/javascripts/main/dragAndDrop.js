@@ -111,14 +111,14 @@ sendFileButton.onclick = () => {
 	}
 	console.log(...fileFormData);
 	xhr.send(fileFormData);
-	//
-	// xhr.upload.onprogress = (event) => {
-	// 	if (event.lengthComputable) {
-	// 		let percent = (event.loaded / event.total) * 100;
-	// 		uploadProgressBar.value = percent;
-	// 	}
-	// };
-	// xhr.onload = () => {
-	// 	uploadProgressBar.value = 100;
-	// };
+
+	xhr.upload.onprogress = (event) => {
+		if (event.lengthComputable) {
+			let percent = (event.loaded / event.total) * 100;
+			uploadProgressBar.value = percent;
+		}
+	};
+	xhr.onload = () => {
+		uploadProgressBar.value = 100;
+	};
 };

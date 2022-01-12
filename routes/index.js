@@ -84,9 +84,36 @@ const storage = multer.diskStorage({
 		cb(null, './public/uploads/temp');
 	},
 	filename: function (req, file, cb) {
-		cb(null, file.originalname + '-' + Date.now() + path.extname(file.originalname));
+		cb(null, file.originalname + '-' + crypto.randomBytes(16).toString('hex') + path.extname(file.originalname));
 	},
 });
+
+async function moveUploadTemp(req, id) {
+	for (let i = 0; i < req.files.length; i++) {
+		let localFilePath;
+		if (typeof req.body.filePath === 'string') {
+			localFilePath = req.body.filePath.split('/');
+		} else {
+			localFilePath = req.body.filePath[i].split('/');
+		}
+		let fileName = localFilePath.pop();
+		console.log(localFilePath);
+		console.log(fileName);
+		if (!fs.existsSync('./public/uploads/' + id + '/' + localFilePath.join('/'))) {
+			fs.mkdirSync('./public/uploads/' + id + '/' + localFilePath.join('/'), { recursive: true });
+			console.log('created dir');
+		}
+		fs.rename(
+			'./public/uploads/temp/' + req.files[i].filename,
+			'./public/uploads/' + id + '/' + localFilePath.join('/') + '/' + fileName,
+			(err) => {
+				if (err) throw err;
+			}
+		);
+		//
+	}
+}
+
 const upload = multer({ storage: storage });
 router.post('/upload', upload.array('files'), function (req, res) {
 	// router.post('/upload', multer().fields([]), function (req, res) {
@@ -106,23 +133,18 @@ router.post('/upload', upload.array('files'), function (req, res) {
 		id = crypto.randomBytes(8).toString('hex');
 	}
 	fs.mkdirSync('./public/uploads/' + id);
-
-	for (let i = 0; i < req.files.length; i++) {
-		let localFilePath = req.body.filePath[i].split('/');
-		localFilePath.pop();
-		if (!fs.existsSync('./public/uploads/' + id + '/' + localFilePath.join('/'))) {
-			fs.mkdirSync('./public/uploads/' + id + '/' + localFilePath.join('/'));
-		}
-		fs.rename(
-			'./public/uploads/temp/' + req.files[i].filename,
-			'./public/uploads/' + id + '/' + req.body.filePath[i],
-			(err) => {
-				if (err) throw err;
-			}
-		);
-		//
-	}
+	moveUploadTemp(req, id)
+		.then(() => {
+			res.cookie('id', id);
+			res.send(id);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+	//TODO make it async
 	//TODO response id as cookie and update the page with the id
-	res.send('uploaded');
+	// res.send('uploaded');
 });
+//
+
 module.exports = router;
