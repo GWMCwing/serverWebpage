@@ -6,6 +6,7 @@ const pathToViews = path.join(__dirname, '../views');
 const multer = require('multer');
 const fs = require('fs');
 const crypto = require('crypto');
+const archiver = require('archiver');
 /* GET home page. */
 router.get('/', function (req, res, next) {
 	res.sendFile(pathToViews + '/html/main/main.html');
@@ -18,18 +19,17 @@ router.get('/test', function (req, res, next) {
 });
 
 // authendication
-// testing
-var users = {
-	tj: {
-		name: 'tj',
-	},
-};
 
-hash({ password: 'foobar' }, function (err, pass, salt, hash) {
+var users;
+fs.readFile('./bin/config.json', 'utf8', function (err, data) {
 	if (err) throw err;
-	users.tj.hash = hash;
-	users.tj.salt = salt;
+	users = JSON.parse(data).users;
 });
+// hash({ password: 'foobar' }, function (err, pass, salt, hash) {
+// 	if (err) throw err;
+// 	users.tj.hash = hash;
+// 	users.tj.salt = salt;
+// });
 
 function authenticate(name, pass, fn) {
 	if (!module.parent) console.log('authenticating %s:%s', name, pass);
@@ -119,15 +119,6 @@ router.post('/upload', upload.array('files'), function (req, res) {
 	// router.post('/upload', multer().fields([]), function (req, res) {
 	console.log(req.files, req.body);
 
-	//
-	// create id folder (time stamp ?)
-	// loop through the filePath
-	// split the filePath /
-	// for each subPath create dir if not exist
-	// move the file to the dir if the subPath is the last one i.e. the file name
-	//
-	// response: id as cookie
-	//
 	let id = crypto.randomBytes(8).toString('hex');
 	while (fs.existsSync('./public/uploads/' + id)) {
 		id = crypto.randomBytes(8).toString('hex');
@@ -141,10 +132,54 @@ router.post('/upload', upload.array('files'), function (req, res) {
 		.catch((err) => {
 			console.log(err);
 		});
-	//TODO make it async
-	//TODO response id as cookie and update the page with the id
 	// res.send('uploaded');
 });
 //
+//
+function createZip(id, oriFilePath) {
+	fs.mkdirSync('./public/uploads/zip/' + id, { recursive: true });
+	let errorOccured = false;
+	const output = fs.createWriteStream('./public/uploads/zip/' + id + '.zip');
+	const archive = archiver('zip');
+	//
+	output.on('close', function () {
+		console.log(archive.pointer() + ' total bytes');
+		console.log('archiver has been finalized and the output file descriptor has closed.');
+	});
+	output.on('end', function () {
+		console.log('Data has been drained');
+	});
+	archive.on('warning', function (err) {
+		console.log(err);
+		errOccured = true;
+	});
+	archive.on('error', function (err) {
+		console.log(err);
+		errOccured = true;
+	});
+	archive.directory(oriFilePath, id);
+	archive.pipe(output);
+	archive.finalize();
+	return errorOccured;
+}
+router.post('/download', function (req, res, next) {
+	let id = req.body.id;
+	let name = req.body.nameOfFile || id;
+	let oriFilePath = './public/uploads/' + id + '/';
+	let errOccured = false;
+	if (!fs.existsSync(oriFilePath)) {
+		res.send('error');
+		return;
+	}
+	if (!fs.existsSync('./public/uploads/zip/' + id)) {
+		errOccured = createZip(id, oriFilePath);
+	}
+	if (errOccured) {
+		res.send('error occured');
+	} else {
+		res.download('./public/uploads/zip/' + id + '.zip', name + '.zip');
+	}
+	//
+});
 
 module.exports = router;
