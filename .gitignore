@@ -1,6 +1,4 @@
 /node_modules
 /public/uploads/**
-!/public/uploads/temp
-!/public/uploads/zip
 /testFile
 /bin/config.json

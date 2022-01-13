@@ -119,11 +119,14 @@ router.post('/upload', upload.array('files'), function (req, res) {
 	// router.post('/upload', multer().fields([]), function (req, res) {
 	console.log(req.files, req.body);
 
+	if (!fs.existsSync('./public/uploads/temp')) {
+		fs.mkdirSync('./public/uploads/temp', { recursive: true });
+	}
 	let id = crypto.randomBytes(8).toString('hex');
 	while (fs.existsSync('./public/uploads/' + id)) {
 		id = crypto.randomBytes(8).toString('hex');
 	}
-	fs.mkdirSync('./public/uploads/' + id);
+	fs.mkdirSync('./public/uploads/' + id, { recursive: true });
 	moveUploadTemp(req, id)
 		.then(() => {
 			res.cookie('id', id);
@@ -168,13 +171,15 @@ router.post('/download', function (req, res, next) {
 	let oriFilePath = './public/uploads/' + id + '/';
 	let errOccured = false;
 	if (!fs.existsSync(oriFilePath)) {
-		res.send('error');
+		//TODO update the page to display error
+		res.send('error id does not exists');
 		return;
 	}
 	if (!fs.existsSync('./public/uploads/zip/' + id)) {
 		errOccured = createZip(id, oriFilePath);
 	}
 	if (errOccured) {
+		//TODO update the page to display error
 		res.send('error occured');
 	} else {
 		res.download('./public/uploads/zip/' + id + '.zip', name + '.zip');
