@@ -1,3 +1,6 @@
+//TODO create a dedicated logging function with the following format:
+// [type] [time] [message]
+//TODO add color to the log
 var express = require('express');
 var hash = require('pbkdf2-password')();
 var router = express.Router();
@@ -76,6 +79,9 @@ router.post('/login', function (req, res) {
 			req.session.error =
 				'Authentication failed, please check your ' + ' username and password.' + ' (use "tj" and "foobar")';
 			res.redirect('/login');
+			let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+			console.log('ip: ' + ip);
+			console.log('Tried to login as: ' + req.body.username);
 		}
 	});
 });
@@ -117,8 +123,10 @@ async function moveUploadTemp(req, id) {
 const upload = multer({ storage: storage });
 router.post('/upload', upload.array('files'), function (req, res) {
 	// router.post('/upload', multer().fields([]), function (req, res) {
-	console.log(req.files, req.body);
-
+	console.log('Uploaded files:');
+	console.log(req.files);
+	console.log('From body:');
+	console.log(req.body);
 	if (!fs.existsSync('./public/uploads/temp')) {
 		fs.mkdirSync('./public/uploads/temp', { recursive: true });
 	}
@@ -135,7 +143,7 @@ router.post('/upload', upload.array('files'), function (req, res) {
 		.catch((err) => {
 			console.log(err);
 		});
-	// res.send('uploaded');
+	console.log('uploaded id: ' + id);
 });
 //
 //
@@ -168,6 +176,7 @@ function createZip(id, oriFilePath) {
 router.post('/download', function (req, res, next) {
 	let id = req.body.id;
 	let name = req.body.nameOfFile || id;
+	console.log('Trying to download ' + id + ' as ' + name);
 	let oriFilePath = './public/uploads/' + id + '/';
 	let errOccured = false;
 	if (!fs.existsSync(oriFilePath)) {
