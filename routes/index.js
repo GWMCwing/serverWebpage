@@ -76,15 +76,19 @@ router.post('/login', function (req, res) {
 				res.redirect('/');
 			});
 		} else {
-			req.session.error =
-				'Authentication failed, please check your ' + ' username and password.' + ' (use "tj" and "foobar")';
+			req.session.error = 'Authentication failed, please check your ' + ' username and password.';
 			res.redirect('/login');
 			let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-			console.log('ip: ' + ip);
 			console.log('Tried to login as: ' + req.body.username);
+			console.log('ip: ' + ip);
 		}
 	});
 });
+
+//
+//
+
+//files related
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, './public/uploads/temp');
@@ -127,6 +131,7 @@ router.post('/upload', upload.array('files'), function (req, res) {
 	console.log(req.files);
 	console.log('From body:');
 	console.log(req.body);
+	if (req.files.length === 0) return;
 	if (!fs.existsSync('./public/uploads/temp')) {
 		fs.mkdirSync('./public/uploads/temp', { recursive: true });
 	}
@@ -142,14 +147,23 @@ router.post('/upload', upload.array('files'), function (req, res) {
 		})
 		.catch((err) => {
 			console.log(err);
+			return;
 		});
+	if (!fs.existsSync('./public/uploads/fileStructure.json')) {
+		fs.writeFileSync('./public/uploads/fileStructure.json', JSON.stringify({ uploads: {} }));
+	}
+	let fileStr = JSON.parse(fs.readFileSync('./public/uploads/fileStructure.json'));
+	fileStr.uploads[id] = {
+		time: new Date().getTime(),
+	};
+
 	console.log('uploaded id: ' + id);
 });
 //
 //
 function createZip(id, oriFilePath) {
 	fs.mkdirSync('./public/uploads/zip/' + id, { recursive: true });
-	let errorOccured = false;
+	let isErrorOccured = false;
 	const output = fs.createWriteStream('./public/uploads/zip/' + id + '.zip');
 	const archive = archiver('zip');
 	//
@@ -171,11 +185,12 @@ function createZip(id, oriFilePath) {
 	archive.directory(oriFilePath, id);
 	archive.pipe(output);
 	archive.finalize();
-	return errorOccured;
+	return isErrorOccured;
 }
 router.post('/download', function (req, res, next) {
 	let id = req.body.id;
-	let name = req.body.nameOfFile || id;
+	// let name = req.body.nameOfFile || id;
+	let name = id;
 	console.log('Trying to download ' + id + ' as ' + name);
 	let oriFilePath = './public/uploads/' + id + '/';
 	let errOccured = false;
@@ -184,7 +199,7 @@ router.post('/download', function (req, res, next) {
 		res.send('error id does not exists');
 		return;
 	}
-	if (!fs.existsSync('./public/uploads/zip/' + id)) {
+	if (!fs.existsSync('./public/uploads/zip/' + id + '.zip')) {
 		errOccured = createZip(id, oriFilePath);
 	}
 	if (errOccured) {
@@ -195,5 +210,29 @@ router.post('/download', function (req, res, next) {
 	}
 	//
 });
+// TODO
+// save the fileList in a variable and send it to the client
+// modify the file list per upload
+router.post('/fileList', function (req, res, next) {
+	let fileList = {};
+	let uploadIdPath = './public/uploads/';
+	fs.readdirSync(uploadIdPath).forEach((file) => {
+		if (file == 'zip' || file == 'temp' || file.includes('.')) {
+		} else {
+			fileList[file] = [];
+			if (fs.lstatSync(uploadIdPath + file).isDirectory()) {
+				fs.readdirSync(uploadIdPath + file).forEach((file2) => {
+					fileList[file].push(file2);
+				});
+			} else {
+				fileList[file].push(file);
+			}
+		}
+	});
 
+	console.log(fileList);
+	res.setHeader('Content-Type', 'application/json');
+	res.end(JSON.stringify(fileList, null, 2));
+	console.log('sent file list: ' + fileList);
+});
 module.exports = router;

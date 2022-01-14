@@ -15,6 +15,9 @@
 	<progress id="uploadProgressBar" min="0" max="100" value="0" style="width: 100%"></progress>
 </div>
 <div id="serverFileListDiv" class="FileListDiv">
+	<form id="getServerFileList" method="post" action="/fileList">
+		<input type="submit" value = "getServerList">
+	</form>
 	<form id="downloadServerFileForm" method="post" action="/download">
 		<label>Id of the file</label>
 		<input type="text" name="id" placeholder="id of file">
@@ -22,5 +25,6 @@
 		<input type="text" name="nameOfFile" placeholder="name of file">
 		<label>Download Files</label>
 		<input type="submit" value ="download"id="downloadFileButton" ></input>
+	</form>	
 	<ul id="serverFileList" class="FileList"></ul>
 </div>
