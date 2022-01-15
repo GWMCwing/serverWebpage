@@ -154,40 +154,68 @@ async function getFileStructureAsync(path) {
 	return fileStructure;
 }
 /**
- *
+ *	validate the path passing into this function
  * @param {integer} path
  * @param {integer} depth
  * @param {Object} fileList
- * {fileList:[
- * 	dir1Name:[
- * 	file2Name,
- * 	dir2Name:[]
- * 	],
- * 	file1Name
- * ]}
+ * {
+ *		name: { type: directory
+ *
+ *			}
+ * }
  */
-function getFileStructureSync(path, depth, fileList) {
-	if (count == 0) {
-		if (!fs.statSync(path)) return false;
+//
+function getFileStructureSyncRecursive(path, depth) {
+	let pathContentList = fs.readdirSync(path);
+	let fileStructure = {};
+	// console.log(pathContentList);
+	for (let i = 0; i < pathContentList.length; i++) {
+		let currentPath = pathContentList[i];
+		if (fs.statSync(path + '/' + currentPath).isDirectory()) {
+			if (depth < 1) {
+				fileStructure[currentPath] = 'Max Depth Reached';
+			} else {
+				fileStructure[currentPath] = getFileStructureSyncRecursive(path + '/' + currentPath, depth - 1);
+			}
+		} else {
+			fileStructure[currentPath] = 'File';
+		}
 	}
-	if (depth == 0) {
-	} else {
-	}
+	return fileStructure;
 }
-
+function getUploadFileStructure(depth) {
+	let fileStru = getFileStructureSyncRecursive('./public/uploads/', depth);
+	delete fileStru.temp;
+	delete fileStru.zip;
+	return fileStru;
+}
+console.log(JSON.stringify(getUploadFileStructure(5), null, 2));
+//
 router.post('/fileList', function (req, res, next) {
 	let uploadIdPath = './public/uploads/';
-	getFileStructureAsync(uploadIdPath)
-		.then((fileStructure) => {
-			console.log(fileStructure);
-			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify(fileStructure, null, 2));
-			console.log('sent file list: ' + fileStructure);
-		})
-		.catch((err) => {
-			console.log(err);
-			res.send('error occured');
-			return;
-		});
+	let depth = req.body.depth || 5;
+	let uploadFileStructureObj;
+	try {
+		uploadFileStructureObj = getUploadFileStructure(depth);
+		let uploadFileStructureJSON = JSON.stringify(uploadFileStructureObj, null, 2);
+		res.setHeader('Content-Type', 'application/json');
+		res.send(uploadFileStructureJSON);
+		console.log('sent file list: \n' + uploadFileStructureJSON);
+	} catch (error) {
+		res.send('Error Occured');
+	}
+
+	// getFileStructureAsync(uploadIdPath)
+	// 	.then((fileStructure) => {
+	// 		console.log(fileStructure);
+	// 		res.setHeader('Content-Type', 'application/json');
+	// 		res.end(JSON.stringify(fileStructure, null, 2));
+	// 		console.log('sent file list: ' + fileStructure);
+	// 	})
+	// 	.catch((err) => {
+	// 		console.log(err);
+	// 		res.send('error occured');
+	// 		return;
+	// 	});
 });
 module.exports = router;

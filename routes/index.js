@@ -12,10 +12,16 @@ router.get('/', function (req, res, next) {
 router.get('/html/:dir/:htmlName', function (req, res, next) {
 	res.sendFile(pathToViews + '/html/' + req.params.dir + '/' + req.params.htmlName);
 });
-router.get('/test', function (req, res, next) {
-	res.sendFile(pathToViews + '/html/main/test.html');
+router.get('/test/:target', function (req, res, next) {
+	res.sendFile(pathToViews + '/htmlNew/' + req.params.target + '/' + req.params.target);
+});
+router.get('/test/footer', function (req, res, next) {
+	res.sendFile(pathToViews + '/htmlNew/template/footer');
 });
 
+router.get('/test/navBar', function (req, res, next) {
+	res.sendFile(pathToViews + '/htmlNew/template/navBar');
+});
 //
 //
 
